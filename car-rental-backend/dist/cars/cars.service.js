@@ -56,11 +56,10 @@ let CarsService = class CarsService {
         };
     }
     async getAllCars() {
-        const cars = await this.prisma.car.findMany();
-        return cars;
+        return this.prisma.car.findMany();
     }
     async getAvailableCars(startDate, endDate) {
-        const availableCars = await this.prisma.car.findMany({
+        return this.prisma.car.findMany({
             where: {
                 available: true,
                 NOT: {
@@ -75,7 +74,6 @@ let CarsService = class CarsService {
                 },
             },
         });
-        return availableCars;
     }
 };
 exports.CarsService = CarsService;

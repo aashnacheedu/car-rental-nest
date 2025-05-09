@@ -5,7 +5,11 @@ import { PrismaService } from '../prisma/prisma.service';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async register(userData: { name: string; email: string; password: string }) {
+  async register(userData: {
+    name: string;
+    email: string;
+    password: string;
+  }): Promise<{ message: string; user: { id: number; name: string; email: string } }> {
     const existingUser = await this.prisma.user.findUnique({
       where: { email: userData.email },
     });
@@ -24,13 +28,18 @@ export class UsersService {
 
     return {
       message: 'Registration successful',
-      userId: user.id,
-      name: user.name,
-      email: user.email,
+      user: {  // Ensure this structure matches the controller's expectations
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     };
   }
 
-  async login(body: { email: string; password: string }) {
+  async login(body: {
+    email: string;
+    password: string;
+  }): Promise<{ message: string; user: { id: number; name: string; email: string } }> {
     const user = await this.prisma.user.findUnique({
       where: {
         email: body.email,
@@ -43,13 +52,25 @@ export class UsersService {
 
     return {
       message: 'Login successful',
-      userId: user.id,
-      name: user.name,
-      email: user.email,
+      user: {  // Ensure this structure matches the controller's expectations
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     };
   }
 
-  async getBookingsByUserId(userId: number) {
+  async getBookingsByUserId(
+    userId: number,
+  ): Promise<
+    {
+      id: number;
+      carId: number;
+      userId: number;
+      start_date: Date;
+      end_date: Date;
+    }[]
+  > {
     return this.prisma.booking.findMany({
       where: {
         userId,

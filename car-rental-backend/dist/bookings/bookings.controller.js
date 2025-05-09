@@ -21,15 +21,12 @@ let BookingsController = class BookingsController {
     constructor(bookingsService) {
         this.bookingsService = bookingsService;
     }
-    async create(createBookingDto, req) {
+    async create(data, req) {
         const userId = req.session?.userId;
         if (!userId) {
             throw new common_1.UnauthorizedException('User not logged in');
         }
-        return await this.bookingsService.create({
-            ...createBookingDto,
-            userId,
-        });
+        return this.bookingsService.create({ ...data, userId });
     }
     async findAll() {
         const bookings = await this.bookingsService.findAll();

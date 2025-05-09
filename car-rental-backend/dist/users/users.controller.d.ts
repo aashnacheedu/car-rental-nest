@@ -7,12 +7,30 @@ export declare class UsersController {
         name: string;
         email: string;
         password: string;
-    }): Promise<any>;
+    }): Promise<{
+        message: string;
+        user: {
+            id: number;
+            name: string;
+            email: string;
+        };
+    }>;
     login(body: {
         email: string;
         password: string;
-    }, req: Request): Promise<any>;
-    getSession(req: Request): Promise<any>;
-    getMyBookings(req: Request): Promise<any>;
-    logout(req: Request): Promise<any>;
+    }, req: Request): Promise<{
+        message: string;
+        userId: number;
+    }>;
+    getSession(req: Request): Promise<{
+        message: string;
+        userId: number;
+    }>;
+    getMyBookings(req: Request): Promise<{
+        message: string;
+        bookings: any[];
+    }>;
+    logout(req: Request): Promise<{
+        message: string;
+    }>;
 }

@@ -21,5 +21,6 @@
     "noFallthroughCasesInSwitch": false,
     "typeRoots": ["./node_modules/@types", "./types"],
     "types": ["node", "jest"]
-  }
+  },
+  "include": ["src/**/*"]
 }

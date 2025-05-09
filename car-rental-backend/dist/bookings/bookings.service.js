@@ -53,24 +53,21 @@ let BookingsService = class BookingsService {
         };
     }
     async findAll() {
-        const bookings = await this.prisma.booking.findMany({
+        return this.prisma.booking.findMany({
             include: { car: true },
         });
-        return bookings;
     }
     async findByUserId(userId) {
-        const bookings = await this.prisma.booking.findMany({
+        return this.prisma.booking.findMany({
             where: { userId },
             include: { car: true },
         });
-        return bookings;
     }
     async findOne(id) {
-        const booking = await this.prisma.booking.findUnique({
+        return this.prisma.booking.findUnique({
             where: { id },
             include: { car: true },
         });
-        return booking;
     }
     async update(id, updateDto) {
         const updatedBooking = await this.prisma.booking.update({

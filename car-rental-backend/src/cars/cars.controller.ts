@@ -1,5 +1,6 @@
 import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
 import { CarsService } from './cars.service';
+import { Car } from '@prisma/client';
 
 @Controller('cars')
 export class CarsController {
@@ -9,7 +10,7 @@ export class CarsController {
   async getAvailableCars(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string
-  ): Promise<any> {
+  ): Promise<{ message: string; cars: Car[] }> {
     if (!startDate || !endDate) {
       throw new BadRequestException('Both startDate and endDate are required.');
     }
@@ -33,7 +34,7 @@ export class CarsController {
   }
 
   @Get('all')
-  async getAllCars(): Promise<any> {
+  async getAllCars(): Promise<{ message: string; cars: Car[] }> {
     const cars = await this.carsService.getAllCars();
     return {
       message: 'All cars fetched successfully',

@@ -2,12 +2,15 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { Booking, Car } from '@prisma/client';
+
+type BookingWithCar = Booking & { car: Car };
 
 @Injectable()
 export class BookingsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateBookingDto & { userId: number }): Promise<any> {
+  async create(data: CreateBookingDto & { userId: number }): Promise<{ message: string; booking: BookingWithCar }> {
     const overlappingBooking = await this.prisma.booking.findFirst({
       where: {
         carId: data.carId,
@@ -46,45 +49,44 @@ export class BookingsService {
     };
   }
 
-  async findAll(): Promise<any> {
-    const bookings = await this.prisma.booking.findMany({
+  async findAll(): Promise<BookingWithCar[]> {
+    return this.prisma.booking.findMany({
       include: { car: true },
     });
-    return bookings;
   }
 
-  async findByUserId(userId: number): Promise<any> {
-    const bookings = await this.prisma.booking.findMany({
+  async findByUserId(userId: number): Promise<BookingWithCar[]> {
+    return this.prisma.booking.findMany({
       where: { userId },
       include: { car: true },
     });
-    return bookings;
   }
 
-  async findOne(id: number): Promise<any> {
-    const booking = await this.prisma.booking.findUnique({
+  async findOne(id: number): Promise<BookingWithCar | null> {
+    return this.prisma.booking.findUnique({
       where: { id },
       include: { car: true },
     });
-    return booking;
   }
 
-  async update(id: number, updateDto: UpdateBookingDto): Promise<any> {
+  async update(id: number, updateDto: UpdateBookingDto): Promise<{ message: string; booking: BookingWithCar }> {
     const updatedBooking = await this.prisma.booking.update({
       where: { id },
       data: updateDto,
       include: { car: true },
     });
+
     return {
       message: 'Booking updated successfully',
       booking: updatedBooking,
     };
   }
 
-  async remove(id: number): Promise<any> {
+  async remove(id: number): Promise<{ message: string; deletedBookingId: number }> {
     const deleted = await this.prisma.booking.delete({
       where: { id },
     });
+
     return {
       message: 'Booking deleted',
       deletedBookingId: deleted.id,

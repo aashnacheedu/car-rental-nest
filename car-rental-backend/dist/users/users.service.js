@@ -33,9 +33,11 @@ let UsersService = class UsersService {
         });
         return {
             message: 'Registration successful',
-            userId: user.id,
-            name: user.name,
-            email: user.email,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            },
         };
     }
     async login(body) {
@@ -49,9 +51,11 @@ let UsersService = class UsersService {
         }
         return {
             message: 'Login successful',
-            userId: user.id,
-            name: user.name,
-            email: user.email,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            },
         };
     }
     async getBookingsByUserId(userId) {

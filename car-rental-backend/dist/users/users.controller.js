@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
-const common_2 = require("@nestjs/common");
 const auth_guard_1 = require("../auth.guard");
 let UsersController = class UsersController {
     usersService;
@@ -27,16 +26,17 @@ let UsersController = class UsersController {
             throw new common_1.BadRequestException('All fields (name, email, password) are required');
         }
         const result = await this.usersService.register(body);
-        return { message: 'User registered successfully', user: result };
+        return result;
     }
     async login(body, req) {
         if (!body.email || !body.password) {
             throw new common_1.BadRequestException('Email and password are required');
         }
-        const user = await this.usersService.login(body);
-        req.session.userId = user.userId;
+        const result = await this.usersService.login(body);
+        const user = result.user;
+        req.session.userId = user.id;
         console.log('User logged in, session userId:', req.session.userId);
-        return { message: 'Login successful', userId: user.userId };
+        return { message: 'Login successful', userId: user.id };
     }
     async getSession(req) {
         if (!req.session?.userId) {
@@ -84,7 +84,7 @@ __decorate([
 ], UsersController.prototype, "getSession", null);
 __decorate([
     (0, common_1.Get)('my-bookings'),
-    (0, common_2.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

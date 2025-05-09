@@ -8,26 +8,28 @@ export declare class UsersService {
         password: string;
     }): Promise<{
         message: string;
-        userId: number;
-        name: string;
-        email: string;
+        user: {
+            id: number;
+            name: string;
+            email: string;
+        };
     }>;
     login(body: {
         email: string;
         password: string;
     }): Promise<{
         message: string;
-        userId: number;
-        name: string;
-        email: string;
+        user: {
+            id: number;
+            name: string;
+            email: string;
+        };
     }>;
     getBookingsByUserId(userId: number): Promise<{
         id: number;
-        end_date: Date;
-        start_date: Date;
-        status: string;
-        userId: number;
         carId: number;
-        createdAt: Date;
+        userId: number;
+        start_date: Date;
+        end_date: Date;
     }[]>;
 }
